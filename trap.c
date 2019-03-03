@@ -77,6 +77,22 @@ trap(struct trapframe *tf)
             cpuid(), tf->cs, tf->eip);
     lapiceoi();
     break;
+  case T_PGFLT: ;
+    uint stackPages = myproc()->num_page;
+    uint addressCheck = rcr2();
+
+    if (addressCheck < USERTOP - (stackPages * PGSIZE) && addressCheck > PGROUNDDOWN(USERTOP - (stackPages * PGSIZE) - 1)) {
+      if (allocuvm(myproc()->pgdir, PGROUNDDOWN(USERTOP - (stackPages * PGSIZE)), USERTOP - (stackPages * PGSIZE)) == 0) {
+        cprintf("Page allocation failed\n");
+        break;
+      }
+      // Increase number of stack pages by 1 upon successfully allocating a new page
+      myproc()->num_page += 1;
+      break;
+    }
+    cprintf("Hello\n");
+    break;
+
 
   //PAGEBREAK: 13
   default:

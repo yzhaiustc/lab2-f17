@@ -190,7 +190,8 @@ fork(void)
   }
 
   // Copy process state from proc.
-  if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz)) == 0){
+  // added for lab3 for the new syntax of copyuvm();
+  if((np->pgdir = copyuvm(curproc->pgdir, curproc->sz, curproc->num_page)) == 0){
     kfree(np->kstack);
     np->kstack = 0;
     np->state = UNUSED;
