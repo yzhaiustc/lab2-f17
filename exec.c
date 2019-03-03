@@ -103,6 +103,7 @@ exec(char *path, char **argv)
   curproc->tf->esp = sp;
   // added for lab3, initialize the page number
   curproc->num_page = 1;
+  cprintf("Initial number of pages by the process: %d\n", curproc->num_page);
   switchuvm(curproc);
   freevm(oldpgdir);
   return 0;

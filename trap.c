@@ -83,11 +83,12 @@ trap(struct trapframe *tf)
 
     if (addressCheck < USERTOP - (stackPages * PGSIZE) && addressCheck > PGROUNDDOWN(USERTOP - (stackPages * PGSIZE) - 1)) {
       if (allocuvm(myproc()->pgdir, PGROUNDDOWN(USERTOP - (stackPages * PGSIZE)), USERTOP - (stackPages * PGSIZE)) == 0) {
-        cprintf("Page allocation failed\n");
-        break;
+        cprintf("case T_PGFLT from trap.c: allocuvm failed. Number of current allocated pages: %d\n", myproc()->num_page);
+	break;
       }
       // Increase number of stack pages by 1 upon successfully allocating a new page
       myproc()->num_page += 1;
+      cprintf("case T_PGFLT from trap.c: allocuvm succeeded. Number of pages allocated: %d\n", myproc()->num_page);
       break;
     }
     cprintf("Hello\n");
